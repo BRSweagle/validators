@@ -1,4 +1,5 @@
 //
+//
 // nodesKeyComparator.js
 // Compare 2 nodes to check that they have the same keys
 // Inputs are
@@ -6,8 +7,8 @@
 // Creator:   Dimitris for customer POC
 // Version:   1.0
 //
-var fromNode = ["releases","dev"];
-var toNode = ["releases","tst"];
+var fromNode = ["releases","DEV","ini"];
+var toNode = ["releases","TST","ini"];
 
 var fromSubset = metadataset;
 var toSubset = metadataset;
@@ -23,10 +24,9 @@ function getSubset(subset, args) {
   	}
   	// if not valid return error message
   	else {
-  		return "ERROR: path not found: " + args[i];
+  	    // ERROR : Path not found
+  	    return false;
   	}
-  // keep looping through the provided arguments.
-  // when last node is reached, subset contains the data we are looking for
   }
   return subset;
 }
@@ -34,12 +34,20 @@ function getSubset(subset, args) {
 fromSubset = getSubset(fromSubset,fromNode);
 toSubset = getSubset(toSubset,toNode);
 
-// Check length of both subsetsare equals
-if (Object.keys(fromSubset).length != Object.keys(toSubset).length) {
+var sizeFromSubset = Object.keys(fromSubset).length;
+var sizeToSubset = Object.keys(toSubset).length;
+
+// Check if any path were not found
+if ((sizeFromSubset == 0) || (sizeToSubset == 0)) {
+    return false;
+}
+
+// Check length of both subsets
+if (sizeFromSubset != sizeToSubset) {
   return false;
 }
 
-// compare both subsets keys only !
+// compare both subsets
 for (var item in fromSubset) {
   if (!(toSubset.hasOwnProperty(item))) {
     return false;
