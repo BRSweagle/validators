@@ -34,12 +34,12 @@ function getSubset(subset, args) {
 fromSubset = getSubset(fromSubset,fromNode);
 toSubset = getSubset(toSubset,toNode);
 
-// Check length of both subsets
+// Check length of both subsetsare equals
 if (Object.keys(fromSubset).length != Object.keys(toSubset).length) {
   return false;
 }
 
-// compare both subsets
+// compare both subsets keys only !
 for (var item in fromSubset) {
   if (!(toSubset.hasOwnProperty(item))) {
     return false;
