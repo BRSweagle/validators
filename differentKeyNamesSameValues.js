@@ -1,6 +1,5 @@
-/*
- * check that the value of 2 different keyNames is the same
- */
+// description: Check that the value of 2 different keyNames is the same
+
 var keyPairs = ["find.case.keys=find.case.values", "output.case.nodes=output.case.values"];
 var keysFound =[];
 var errorFound = false;
@@ -12,7 +11,7 @@ for (var i=0; i<keyPairs.length;i++) {
     if (keysFound[0] !== keysFound[1]) {
       errorFound = true;
       break;
-    } 
+    }
   }
   keysFound =[];
 }
@@ -28,7 +27,7 @@ function findObjectKeys(mds, pair) {
         keysFound.push(mds[item]);
         pair = pair.splice( pair.indexOf(item), 1)
       }
-     
+
     }
   }
 }

@@ -1,19 +1,15 @@
-
-/**
- * Check if a key that contains a substring has a value that contains specific substring.
- */
-
+// description: Check if key that contains a substring has a value that contains specific substring
 
  var keyNamesWithKeyValues = {
   "cluster-name" : "cluster",
   "env.db.schema" : "mdm"
 };
- 
+
 // errorFound is a local variable that founds errors
 var searches = {};
 var errorFound = false;
 /**
- * searchSubsting function searches the whole metadataset to find keys that include a given substring 
+ * searchSubsting function searches the whole metadataset to find keys that include a given substring
  * and checks if their values also include a given substring
  * mds must be the given metadataset,
  * searchKey must be the string we want to check in the keys,
@@ -51,9 +47,9 @@ for (var obj in keyNamesWithKeyValues) {
 
 //searchSubstring(metadataset,"eol.date", "");
 /**
- * errorsFound now is the number of errors found. 
+ * errorsFound now is the number of errors found.
  * It returns true when there are no errors (no values found without the given search value)
- * It returns false when at least one error is found 
+ * It returns false when at least one error is found
  */
 if (errorFound) {
   return false;

@@ -1,4 +1,5 @@
-//
+// description: Compare 2 nodes to check that some values are identical and others are different
+
 // envsComparator.js
 // Compare 2 nodes to check that some values are identical and others are different
 // Inputs are

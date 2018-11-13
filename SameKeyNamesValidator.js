@@ -1,6 +1,5 @@
-/*
- * check that for a list of given keyNames, there is only 1 unique value for every keyName
- */
+// description: Check unique values for a given keys list
+
 var keyNames = ["find.case.keys"];
 var keysFound ={};
 var errorFound = false;

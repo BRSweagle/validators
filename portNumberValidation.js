@@ -1,13 +1,10 @@
-
-/**
- * Check if a key that corresponds to a portNumber has a value above a given threshold.
- */
+// description: Check if a key that corresponds to a portNumber has a value above a given threshold
  
  var keysWithThreasholds = {
   "env.core.server.port" : 1024,
   "env.db.port" : 78897
 };
- 
+
 // errorsFound is a local variable that counts error found
 var errorsFound = 0;
 /**
@@ -38,12 +35,12 @@ for (var obj in keysWithThreasholds) {
 }
 
 /**
- * errorsFound now is the number of errors found. 
+ * errorsFound now is the number of errors found.
  * It returns true when there are no errors (no values found below their threshold)
- * It returns false when at least one error is found 
+ * It returns false when at least one error is found
  */
 if (errorsFound === 0) {
-  return true;  
+  return true;
 }
 else {
   return false;

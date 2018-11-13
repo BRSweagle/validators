@@ -1,3 +1,4 @@
+// description: Check that they are no duplicate keys in MDS
 
 var skipSameValue = false;
 
@@ -25,7 +26,7 @@ function duplicateKeyNames (mds) {
 
     			}
 
-    		} 
+    		}
 
 		}
 	}

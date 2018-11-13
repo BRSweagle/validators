@@ -1,4 +1,5 @@
-//
+// description: Check if values contains a string identifying a DEV server
+
 // noDevServer.js
 // For each key in MDS, check if value contains a string identifying a DEV server
 // Creator:   Dimitris Finas for customer POC

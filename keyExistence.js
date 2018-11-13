@@ -1,5 +1,5 @@
-// Find out if a certain key exists in the MDs. (For example check if key "ip" exists)
-
+// description: Check if a specific keys list exists
+// For example: check if key "ip" exists
 
 var keyNames = ["dependency.component.name",
              "db.host"];
@@ -42,7 +42,7 @@ for (var i = 0; i < keyNames.length; i++) {
 /**
  * Searches is an object with the outcome of the search for each key
  * It returns true when there are no errors (all keys where found inside metadataset)
- * It returns false when at least one key was not found 
+ * It returns false when at least one key was not found
  */
 for ( var obj in searches) {
   if (!(searches[obj]))

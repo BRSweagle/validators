@@ -1,4 +1,5 @@
-//
+// description: Check if password values are encrypted
+
 // passwordChecker.js
 // For each key that is suspected to be a password, check if value is put as sensitive data
 // Creator:   Dimitris Finas for customer POC

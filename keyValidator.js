@@ -1,8 +1,5 @@
+// description: Check if specific keys list has specific values
 
-/**
- * Check if a key has a certain value.
- */
- 
 /**
  * var keysWithWantedValues is an object that holds the keys that we want to search with their wanted values in an array
  */
@@ -50,11 +47,11 @@ function validateKey (mds, searchKey, searchValue) {
 for (var obj in keysWithWantedValues) {
   for (var i=0; i < keysWithWantedValues[obj].length; i++) {
     validateKey(metadataset, obj, keysWithWantedValues[obj][i]);
-  } 
+  }
 }
-/** 
+/**
  * It returns true when there are no errors (no keys were found with wrong values)
- * It returns false when at least one error is found 
+ * It returns false when at least one error is found
  */
 for (obj in searches) {
   for (var key in searches[obj]){

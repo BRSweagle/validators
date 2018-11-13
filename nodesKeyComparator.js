@@ -1,5 +1,5 @@
-//
-//
+// description: Compare 2 nodes to check that they have the same keys
+
 // nodesKeyComparator.js
 // Compare 2 nodes to check that they have the same keys
 // Inputs are

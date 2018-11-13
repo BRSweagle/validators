@@ -1,16 +1,18 @@
+// description: Check several PROD compliancy rules
+
 /** example validator to ensure that no typical development settings are still in use
  * 1: validates for a list of keyNames that every MDIkey has a specific value
  * 2: validates that a set of mandatory keys exists and are not empty
  * 3: validates that no MDI key can have one of the values in the list of unwantedValues
- * 4: validates that a list of keyNames can only appear once 
+ * 4: validates that a list of keyNames can only appear once
  */
- 
+
 var keyNamesWithKeyValues = {
   "envType" : "PRD",
   "envEnabled" : "true"
 };
 var mandatoryKeys = ["regionalZone","allowHTTPStraffic"];
-var unwantedValues = ["root","https://localhost","127.0.0.1"]; 
+var unwantedValues = ["root","https://localhost","127.0.0.1"];
 var uniqueValues = ["db.schema"];
 
 var searches = {};
@@ -101,11 +103,11 @@ else {
 for (var obj in keyNamesWithKeyValues) {
   searchKeys(metadataset, obj, keyNamesWithKeyValues[obj]);
 }
- 
+
 /**
  * return the result
  */
- 
+
 if (errorFound) {
   return false;
 }
