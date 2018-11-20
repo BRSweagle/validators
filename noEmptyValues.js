@@ -1,6 +1,6 @@
 // description: Check that all keys have values
 // errorMsg: All keys must have a value !
-
+ 
 // noEmptyValues.js
 // Check that all keys have values
 // Creator:   Dimitris Finas for customer POC

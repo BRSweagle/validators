@@ -22,7 +22,6 @@ var exceptionList= [
 
 // searches is list of all key matching keywords
 var searches = {};
-// errorFound is a local variable that founds errors
 var errorFound = false;
 /**
  * searchSubsting function searches the whole metadataset to find keys that include a given substring

@@ -1,6 +1,6 @@
 // description: Check is no URL is used with HTTP (only HTTPS allowed)
 // errorMsg: Only HTTPS url are allowed !
-
+ 
 // noHTTP.js
 // Check is no URL is used with HTTP (only HTTPS allowed)
 // Creator:   Dimitris Finas for customer POC
