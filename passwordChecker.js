@@ -4,17 +4,21 @@
 // For each key that is suspected to be a password, check if value is put as sensitive data
 // Creator:   Dimitris Finas for customer POC
 // Creator:   Use substringValidator.js as source
-// Version:   1.1
+// Version:   1.2 - Add exception list
 //
+
 
 // Define keywords in key name that defines a password
  var keyNamesWithPasswordValues = [
+//  "password", This is already handled by "pass" below
   "pass",
   "pwd",
-// For test purpose (uncomment for wrong matching):
-//  "name",
-  "password"
+  "secret"
 ];
+
+var exceptionList= [
+    "siclv1.errorCode.INVALID_LOGIN_PASSWORD_FORMAT"
+    ];
 
 // searches is list of all key matching keywords
 var searches = {};
@@ -40,12 +44,22 @@ function searchSubstring (mds, searchKey) {
       searchSubstring (mds[item], searchKey);
     } else {
       // check if the key contains the search term
-      if (item.toLowerCase().includes(searchKey.toLowerCase())) {
-        searches[searchKey] = true;
-        // check if the value equals "..." which means protected for Sweagle
-        if  (!(mds[item] === "...")){
-          errorFound = true;
-          break;
+      if (item.toLowerCase().includes(searchKey)) {
+        // check if not in exception list
+        var exception = false;
+        for(var exc=0; exc < exceptionList.length; exc++) {
+          if (item.toLowerCase() === exceptionList[exc].toLowerCase()) {
+              exception=true;
+              break;
+          }
+        }
+        if (exception === false) {
+            searches[searchKey] = true;
+            // check if the value contains the given subvalue
+            if  (!(mds[item] === "...")){
+              errorFound = true;
+              break;
+            }
         }
       }
     }
@@ -54,16 +68,15 @@ function searchSubstring (mds, searchKey) {
 
 // here we call our function with different search terms
 for(var i= 0; i < keyNamesWithPasswordValues.length; i++) {
-  searchSubstring(metadataset, keyNamesWithPasswordValues[i]);
-  // Exit as soon as a error is found
-  if (errorFound) {
-    return false;
-  }
+  searchSubstring(metadataset, keyNamesWithPasswordValues[i].toLowerCase());
 }
 
 /**
- * It returns true when there are no errors (no values found without the given search value)
- * It returns false when at least one error is found
+ * returns true when there are no errors (no values found without the given search value)
+ * returns false when at least one error is found
  */
+if (errorFound) {
+  return false;
+}
 
 return true;
