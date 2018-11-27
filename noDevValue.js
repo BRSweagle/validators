@@ -1,18 +1,27 @@
-// description: Check if values contains a string identifying a DEV server
+// description: Check if values contains a string identifying a DEV server or DEBUG log level
 
-// noDevServer.js
+// noDevValue.js
 // For each key in MDS, check if value contains a string identifying a DEV server
 // Creator:   Dimitris Finas for customer POC
 // Creator:   Use substringValidator.js as source
-// Version:   1.0
+// Version:   1.1 - add exception list
 //
 
-// Define keywords in key values that defines a DEV server
- var keyValuesWithDevServer = [
-  "XXX"
+// Define keywords in key values that defines a DEV value
+// like a DEV server, or DEBUG log level, or HTTP url instead of HTTPS
+ var keyValuesWithDevValue = [
+  "DEBUG",
+  "http:/"
 ];
 
-// searches is list of all key matching keywords
+// List of keys that won't be checked
+var exceptionList= [
+    "KEYNAME"
+    ];
+
+
+// searches is list of all key matching the rule
+// This will be used when validators allows custom error messages
 var searches = {};
 // errorFound is a local variable that founds errors
 var errorFound = false;
@@ -31,17 +40,26 @@ function searchSubstring (mds, searchValue) {
       searchSubstring (mds[item], searchValue);
     } else {
       // check if the key contains the search term
-      if (mds[item].toLowerCase().includes(searchValue.toLowerCase())) {
+      if (mds[item].toLowerCase().includes(searchValue)) {
+        var exception = false;
+        for(var exc=0; exc < exceptionList.length; exc++) {
+          if (item.toLowerCase() === exceptionList[exc].toLowerCase()) {
+              exception=true;
+              break;
+          }
+        }
+        if (exception === false) {
           errorFound = true;
           break;
+        }
       }
     }
   }
 }
 
 // here we call our function with different search terms
-for(var i= 0; i < keyValuesWithDevServer.length; i++) {
-  searchSubstring(metadataset, keyValuesWithDevServer[i]);
+for(var i= 0; i < keyValuesWithDevValue.length; i++) {
+  searchSubstring(metadataset, keyValuesWithDevValue[i].toLowerCase());
   if (errorFound) {
     return false;
   }
