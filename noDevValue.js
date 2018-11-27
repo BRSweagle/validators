@@ -1,4 +1,4 @@
-// description: Check if values contains a string identifying a DEV server or DEBUG log level
+// description: Check if values contains a string identifying a DEV value (like DEV server or DEBUG log level)
 
 // noDevValue.js
 // For each key in MDS, check if value contains a string identifying a DEV server

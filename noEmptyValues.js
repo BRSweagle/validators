@@ -1,11 +1,16 @@
 // description: Check that all keys have values
 // errorMsg: All keys must have a value !
- 
+
 // noEmptyValues.js
 // Check that all keys have values
 // Creator:   Dimitris Finas for customer POC
-// Version:   1.0
+// Version:   1.1 - Add exception list
 //
+
+// List of keys that won't be checked
+var exceptionList= [
+    "KEYNAME"
+    ];
 
 var errorFound = false;
 
@@ -20,8 +25,17 @@ function checkValue (mds) {
     } else {
         // check if the value contains the given subvalue
         if  (mds[item] === "") {
-          errorFound = true;
-          break;
+          var exception = false;
+          for(var exc=0; exc < exceptionList.length; exc++) {
+            if (item.toLowerCase() === exceptionList[exc].toLowerCase()) {
+                exception=true;
+                break;
+            }
+          }
+          if (exception === false) {
+            errorFound = true;
+            break;
+          }
         }
     }
   }
