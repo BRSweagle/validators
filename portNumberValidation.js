@@ -24,7 +24,7 @@ function searchport (mds, searchKey, threshold) {
       if (item === searchKey ) {
         // check if the value is not above the given threshold
         if  (!(mds[item].length > 0 && Number(mds[item]) > threshold)) {
-          errorsFound = true;
+          errorFound = true;
           errorMsg = errorMsg+"ERROR: Port "+item+" has a value of "+mds[item]+" below required threshold of "+threshold+".\n";
         }
       }
