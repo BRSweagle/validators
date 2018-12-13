@@ -1,14 +1,14 @@
-// description: Check is no URL is used with HTTP (only HTTPS allowed)
-// errorMsg: Only HTTPS url are allowed !
- 
+// description: Check if no URL is used with HTTP (only HTTPS allowed)
+
 // noHTTP.js
-// Check is no URL is used with HTTP (only HTTPS allowed)
+// Check if no URL is used with HTTP (only HTTPS allowed)
 // Creator:   Dimitris Finas for customer POC
-// Version:   1.0
+// Version:   1.1 - For Sweagle 2.23, handles new error format in JSON
 //
 
-var errorFound = false;
 var searchValue = "http:/";
+var errorFound = false;
+var errorMsg = "";
 
 function checkValue (mds) {
 
@@ -21,6 +21,7 @@ function checkValue (mds) {
         // check if the value contains the given subvalue
         if  (mds[item].toLowerCase().includes(searchValue)) {
           errorFound = true;
+          errorMsg = errorMsg+"ERROR: key "+item+" contains an HTTP:// url value.\n";
           break;
         }
     }
@@ -29,13 +30,4 @@ function checkValue (mds) {
 
 checkValue(metadataset);
 
-/**
- * errorsFound now is the boolean of errors found.
- * It returns true when there are no errors (no values found without the given search value)
- * It returns false when at least one error is found
- */
-if (errorFound) {
-  return false;
-}
-
-return true;
+return {"result":!errorFound,"description":errorMsg};

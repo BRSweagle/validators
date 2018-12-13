@@ -1,12 +1,13 @@
 // description: Check if a key that corresponds to a portNumber has a value above a given threshold
- 
+// Version:   1.1 - For Sweagle 2.23, handles new error format in JSON
+
  var keysWithThreasholds = {
   "env.core.server.port" : 1024,
   "env.db.port" : 78897
 };
 
-// errorsFound is a local variable that counts error found
-var errorsFound = 0;
+var errorFound = false;
+var errorMsg = "";
 /**
  * searchport function searches the whole metadataset to find the given searchkey and compare it with the given threshold
  * mds must be the given metadataset, searchKey must be the key we want to check, threshold must be the numeric limit
@@ -23,7 +24,8 @@ function searchport (mds, searchKey, threshold) {
       if (item === searchKey ) {
         // check if the value is not above the given threshold
         if  (!(mds[item].length > 0 && Number(mds[item]) > threshold)) {
-          errorsFound = errorsFound + 1;
+          errorsFound = true;
+          errorMsg = errorMsg+"ERROR: Port "+item+" has a value of "+mds[item]+" below required threshold of "+threshold+".\n";
         }
       }
     }
@@ -34,14 +36,4 @@ for (var obj in keysWithThreasholds) {
   searchport(metadataset, obj, keysWithThreasholds[obj]);
 }
 
-/**
- * errorsFound now is the number of errors found.
- * It returns true when there are no errors (no values found below their threshold)
- * It returns false when at least one error is found
- */
-if (errorsFound === 0) {
-  return true;
-}
-else {
-  return false;
-}
+return {"result":!errorFound,"description":errorMsg};

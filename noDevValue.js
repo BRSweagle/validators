@@ -25,6 +25,7 @@ var exceptionList= [
 var searches = {};
 // errorFound is a local variable that founds errors
 var errorFound = false;
+var errorMsg = "";
 /**
  * searchSubsting function searches the whole metadataset to find keys that include a given substring
  *
@@ -50,6 +51,7 @@ function searchSubstring (mds, searchValue) {
         }
         if (exception === false) {
           errorFound = true;
+          errorMsg = errorMsg+"ERROR: key "+item+" contains DEV value: "+mds[item]+".\n"
           break;
         }
       }
@@ -60,13 +62,6 @@ function searchSubstring (mds, searchValue) {
 // here we call our function with different search terms
 for(var i= 0; i < keyValuesWithDevValue.length; i++) {
   searchSubstring(metadataset, keyValuesWithDevValue[i].toLowerCase());
-  if (errorFound) {
-    return false;
-  }
 }
 
-/**
- * It returns true when there are no errors (no values found without the given search value)
- * It returns false when at least one error is found
- */
-return true;
+ return {"result":!errorFound,"description":errorMsg};

@@ -1,4 +1,5 @@
 // description: Check if key that contains a substring has a value that contains specific substring
+// Version:   1.1 - For Sweagle 2.23, handles new error format in JSON
 
  var keyNamesWithKeyValues = {
   "cluster-name" : "cluster",
@@ -8,6 +9,7 @@
 // errorFound is a local variable that founds errors
 var searches = {};
 var errorFound = false;
+var errorMsg = "";
 /**
  * searchSubsting function searches the whole metadataset to find keys that include a given substring
  * and checks if their values also include a given substring
@@ -33,6 +35,7 @@ function searchSubstring (mds, searchKey, searchValue) {
         // check if the value contains the given subvalue
         if  (!(mds[item].includes(searchValue))){
           errorFound = true;
+          errorMsg = errorMsg+"ERROR: key "+item+" doesn't have expected value"+searchValue+".\n"
           break;
         }
       }
@@ -51,12 +54,10 @@ for (var obj in keyNamesWithKeyValues) {
  * It returns true when there are no errors (no values found without the given search value)
  * It returns false when at least one error is found
  */
-if (errorFound) {
-  return false;
-}
 for ( var obj in searches) {
   if (!(searches[obj])) {
-    return false;
+    errorFound = true;
+    errorMsg = errorMsg+"ERROR: required key "+obj+" was not found.\n"
   }
 }
-return true;
+return {"result":!errorFound,"description":errorMsg};

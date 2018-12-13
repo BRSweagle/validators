@@ -1,4 +1,4 @@
-# SWEAGLE 
+# SWEAGLE
 ### Introduction to the VALIDATION parserLogic
 
 This capability allows to validate the content of a pending metadata set using a configurable logic, and return a status result. That logic is basically a javascript snippet that is executed when a validation request or create snapshot request is triggered.
@@ -27,7 +27,8 @@ The error message that is displayed as the error status for pending metadata set
 
 ## Output
 
-The output is the result of the logic and must be a boolean (true / false).
+Since Sweagle 2.23 (December 2018), the output is the result of the logic is no more a simple boolean (true/false), it must be a json structure in the format below:
+{"result":true/false, "description":"result description message"}
 
 It is best practice to apply proper error handling. The parserLogic execution will automatically stop long running javaScript processes (30 seconds).
 

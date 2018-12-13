@@ -1,15 +1,18 @@
-// description: Check if a specific keys list exists
-// For example: check if key "ip" exists
+// description: Check if a specific list of required keys exists
+// For example: check if key "envName" exists
+// Version:   1.1 - For Sweagle 2.23, handles new error format in JSON
 
-var keyNames = ["dependency.component.name",
-             "db.host"];
+var keyNames = ["envName",
+             "envActive"];
 
 
 /**
  * Find if a key matching the first input variable exists.
  */
-
 var searches = {};
+var errorFound = false;
+var errorMsg = "";
+
 /**
 * mds must be the given metadataset,
 * searchKey must be the string we want to check in the keys
@@ -34,6 +37,7 @@ function findObjectKeys(mds, searchKey) {
     }
   }
 }
+
 // here we call our function with different search terms
 for (var i = 0; i < keyNames.length; i++) {
   findObjectKeys(metadataset, keyNames[i]);
@@ -46,6 +50,8 @@ for (var i = 0; i < keyNames.length; i++) {
  */
 for ( var obj in searches) {
   if (!(searches[obj]))
-    return false;
+    errorFound = true;
+    errorMsg = errorMsg+"ERROR: required key "+obj+" was not found.\n"
 }
-return true;
+
+return {"result":!errorFound,"description":errorMsg};

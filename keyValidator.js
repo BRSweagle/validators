@@ -1,16 +1,18 @@
 // description: Check if specific keys list has specific values
+// Version:   1.1 - For Sweagle 2.23, handles new error format in JSON
 
 /**
  * var keysWithWantedValues is an object that holds the keys that we want to search with their wanted values in an array
  */
 var keysWithWantedValues = {
-  "dependency.type" : ["exact", "minimal"],
-  "dependency.level" : ["enforced", "mimimum"]
+  "background-color" : ["#e9e9e9"]
 };
 
 
 // searches is a local object that holds results for each search
 var searches = {};
+var errorFound = false;
+var errorMsg = "";
 /**
  * validateKey function searches the whole metadataset to find the given searchkey and validate its value.
  * mds must be the given metadataset, searchKey must be the key we want to check, searchValue must be the correct value
@@ -56,8 +58,10 @@ for (var obj in keysWithWantedValues) {
 for (obj in searches) {
   for (var key in searches[obj]){
     if (searches[obj][key] === false) {
-      return false;
+      errorFound = true;
+      errorMsg = errorMsg+"ERROR: key "+obj+" doesn't have expected value "+key+".\n"
     }
   }
 }
-return true;
+
+return {"result":!errorFound,"description":errorMsg};

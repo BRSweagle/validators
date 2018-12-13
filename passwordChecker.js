@@ -4,7 +4,7 @@
 // For each key that is suspected to be a password, check if value is put as sensitive data
 // Creator:   Dimitris Finas for customer POC
 // Creator:   Use substringValidator.js as source
-// Version:   1.2 - Add exception list
+// Version:   1.3 - For Sweagle 2.23, handles new error format in JSON
 //
 
 
@@ -23,6 +23,7 @@ var exceptionList= [
 // searches is list of all key matching keywords
 var searches = {};
 var errorFound = false;
+var errorMsg = "";
 /**
  * searchSubsting function searches the whole metadataset to find keys that include a given substring
  * and checks if their values is protected as sensitive data
@@ -57,6 +58,7 @@ function searchSubstring (mds, searchKey) {
             // check if the value contains the given subvalue
             if  (!(mds[item] === "...")){
               errorFound = true;
+              errorMsg = errorMsg+"ERROR: Value for key "+item+" is not encrypted.\n";
               break;
             }
         }
@@ -70,12 +72,4 @@ for(var i= 0; i < keyNamesWithPasswordValues.length; i++) {
   searchSubstring(metadataset, keyNamesWithPasswordValues[i].toLowerCase());
 }
 
-/**
- * returns true when there are no errors (no values found without the given search value)
- * returns false when at least one error is found
- */
-if (errorFound) {
-  return false;
-}
-
-return true;
+return {"result":!errorFound,"description":errorMsg};

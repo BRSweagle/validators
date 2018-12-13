@@ -1,4 +1,5 @@
 // description: Check several PROD compliancy rules
+// Version:   1.1 - For Sweagle 2.23, handles new error format in JSON
 
 /** example validator to ensure that no typical development settings are still in use
  * 1: validates for a list of keyNames that every MDIkey has a specific value
@@ -17,8 +18,8 @@ var uniqueValues = ["db.schema"];
 
 var searches = {};
 var allKeysFound = {};
-var keysNotFound = false;
 var errorFound = false;
+var errorMsg = "";
 
 /**
 * here we define the validation logic to be applied
@@ -33,8 +34,7 @@ function findObjectKeys(mds, searchKey) {
     if  (typeof (mds[item]) === "object") {
       // if value is an object call recursively the function to search this subset of the object
       findObjectKeys (mds[item], searchKey);
-    }
-    else{
+    } else {
       // check if the key equals to the search term
       if (item === searchKey ) {
         searches[searchKey] = true;
@@ -48,10 +48,10 @@ function prdSubstring(mds, substring) {
     for (var item in mds) {
         if (typeof (mds[item]) === 'object') {
             prdSubstring (mds[item], substring);
-        }
-        else {
+        } else {
             if (mds[item].includes(substring)){
                 errorFound = true;
+                errorMsg = errorMsg+"ERROR: key "+item+" has a forbidden value: "+mds[item]+".\n"
                 break;
             }
         }
@@ -59,7 +59,6 @@ function prdSubstring(mds, substring) {
 }
 
 function searchKeys (mds, searchKey, searchValue) {
-
   if (allKeysFound.hasOwnProperty(searchKey) === false) {
     allKeysFound[searchKey] = false;
   }
@@ -68,28 +67,26 @@ function searchKeys (mds, searchKey, searchValue) {
     if  (typeof (mds[item]) === "object") {
       // if value is an object call recursively the function to search this subset of the object
       searchKeys (mds[item], searchKey, searchValue);
-    }
-    else{
+    } else {
       // check if the key equals the search term
       if (item === searchKey) {
         allKeysFound[searchKey] = true;
         // check if the value equals the search term
         if  (mds[item] !== searchValue){
-          keysNotFound = true;
+          errorFound = true;
+          errorMsg = errorMsg+"ERROR: required key "+item+" has value "+mds[item]+" instead of expected "+searchValue+".\n"
           break;
         }
       }
     }
   }
 }
+
 // here we call the validation functions with different search terms
 if (mandatoryKeys.length>0) {
   for (var i = 0; i < mandatoryKeys.length; i++  ) {
     findObjectKeys(metadataset, mandatoryKeys[i]);
   }
-}
-else{
-  return false;
 }
 
 if (unwantedValues.length>0) {
@@ -97,30 +94,20 @@ if (unwantedValues.length>0) {
       prdSubstring(metadataset, unwantedValues[i]);
   }
 }
-else {
-  return false;
-}
+
 for (var obj in keyNamesWithKeyValues) {
   searchKeys(metadataset, obj, keyNamesWithKeyValues[obj]);
 }
 
-/**
- * return the result
- */
-
-if (errorFound) {
-  return false;
-}
-else if (keysNotFound) {
-  return false;
-}
 for ( var obj in searches) {
   if (!(searches[obj]))
-    return false;
+    errorFound = true;
+    errorMsg = errorMsg+"ERROR: required key "+obj+" was not found.\n"
 }
 for ( var obj in allKeysFound) {
   if (!(allKeysFound[obj])) {
-    return false;
+    errorFound = true;
+    errorMsg = errorMsg+"ERROR: required key "+obj+" was not found.\n"
   }
 }
-return true;
+return {"result":!errorFound,"description":errorMsg};

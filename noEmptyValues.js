@@ -4,7 +4,7 @@
 // noEmptyValues.js
 // Check that all keys have values
 // Creator:   Dimitris Finas for customer POC
-// Version:   1.1 - Add exception list
+// Version:   1.2 - For Sweagle 2.23, handles new error format in JSON
 //
 
 // List of keys that won't be checked
@@ -13,6 +13,7 @@ var exceptionList= [
     ];
 
 var errorFound = false;
+var errorMsg = "";
 
 // Function to check if no value is empty
 function checkValue (mds) {
@@ -34,6 +35,7 @@ function checkValue (mds) {
           }
           if (exception === false) {
             errorFound = true;
+            errorMsg = errorMsg+"ERROR: key "+item+" must have a value.\n"
             break;
           }
         }
@@ -42,13 +44,4 @@ function checkValue (mds) {
 }
 
 checkValue(metadataset);
-/**
- * errorsFound now is the boolean of errors found.
- * It returns true when there are no errors (no values found without the given search value)
- * It returns false when at least one error is found
- */
-if (errorFound) {
-  return false;
-}
-
-return true;
+return {"result":!errorFound,"description":errorMsg};
