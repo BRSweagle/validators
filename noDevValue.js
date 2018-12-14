@@ -64,4 +64,8 @@ for(var i= 0; i < keyValuesWithDevValue.length; i++) {
   searchSubstring(metadataset, keyValuesWithDevValue[i].toLowerCase());
 }
 
- return {"result":!errorFound,"description":errorMsg};
+if (errorFound) {
+  return {"result":!errorFound,"description":errorMsg};
+} else {
+  return {"result":!errorFound,"description":"Validation passed successfully"};
+}

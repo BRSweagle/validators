@@ -54,4 +54,8 @@ for ( var obj in searches) {
     errorMsg = errorMsg+"ERROR: required key "+obj+" was not found.\n"
 }
 
-return {"result":!errorFound,"description":errorMsg};
+if (errorFound) {
+  return {"result":!errorFound,"description":errorMsg};
+} else {
+  return {"result":!errorFound,"description":"Validation passed successfully"};
+}

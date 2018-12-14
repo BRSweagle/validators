@@ -64,4 +64,8 @@ for (obj in searches) {
   }
 }
 
-return {"result":!errorFound,"description":errorMsg};
+if (errorFound) {
+  return {"result":!errorFound,"description":errorMsg};
+} else {
+  return {"result":!errorFound,"description":"Validation passed successfully"};
+}
