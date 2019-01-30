@@ -32,16 +32,17 @@ var errorMsg = "";
  * searchKey must be the string we want to check in the keys,
  * searchValue must be the string we want check in the values
  */
-function searchSubstring (mds, searchKey) {
+function searchSubstring (mds, searchKey, path) {
 
   if (searches.hasOwnProperty(searchKey) === false) {
     searches[searchKey] = false;
   }
   for (var item in mds) {
+    var path=path.concat('/' + item);
     // check if the key has a value or points to an object
     if  (typeof (mds[item]) === "object") {
       // if value is an object call recursively the function to search this subset of the object
-      searchSubstring (mds[item], searchKey);
+      searchSubstring (mds[item], searchKey, path);
     } else {
       // check if the key contains the search term
       if (item.toLowerCase().includes(searchKey)) {
@@ -58,7 +59,7 @@ function searchSubstring (mds, searchKey) {
             // check if the value contains the given subvalue
             if  (!(mds[item] === "...")){
               errorFound = true;
-              errorMsg = errorMsg+"ERROR: Value for key "+item+" is not encrypted.\n";
+              errorMsg = errorMsg+"ERROR: Value for key "+path+" is not encrypted.\n";
               break;
             }
         }
@@ -69,7 +70,7 @@ function searchSubstring (mds, searchKey) {
 
 // here we call our function with different search terms
 for(var i= 0; i < keyNamesWithPasswordValues.length; i++) {
-  searchSubstring(metadataset, keyNamesWithPasswordValues[i].toLowerCase());
+  searchSubstring(metadataset, keyNamesWithPasswordValues[i].toLowerCase(), '');
 }
 
 return {"result":!errorFound,"description":errorMsg};
