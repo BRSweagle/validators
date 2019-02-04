@@ -17,7 +17,7 @@
 ];
 
 var exceptionList= [
-    "siclv1.errorCode.INVALID_LOGIN_PASSWORD_FORMAT"
+    "KEYNAME"
     ];
 
 // searches is list of all key matching keywords
