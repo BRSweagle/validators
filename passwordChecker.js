@@ -22,6 +22,8 @@ var exceptionList= [
 
 // searches is list of all key matching keywords
 var searches = {};
+// defines if error msg includes path or not
+var errorFullPath = false;
 var errorFound = false;
 var errorMsg = "";
 /**
@@ -59,7 +61,11 @@ function searchSubstring (mds, searchKey, path) {
             // check if the value contains the given subvalue
             if  (!(mds[item] === "...")){
               errorFound = true;
-              errorMsg = errorMsg+"ERROR: Value for key "+path+" is not encrypted.\n";
+              if (errorFullPath) {
+                errorMsg = errorMsg+"ERROR: Key "+path+" is not encrypted.\n";
+              } else {
+                errorMsg = errorMsg+"ERROR: Key "+item+" is not encrypted.\n";
+              }
               break;
             }
         }
