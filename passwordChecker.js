@@ -4,9 +4,8 @@
 // For each key that is suspected to be a password, check if value is put as sensitive data
 // Creator:   Dimitris Finas for customer POC
 // Creator:   Use substringValidator.js as source
-// Version:   1.3 - For Sweagle 2.23, handles new error format in JSON
+// Version:   1.4 - Add param to manage full path or just keyname in error message
 //
-
 
 // Define keywords in key name that defines a password
  var keyNamesWithPasswordValues = [

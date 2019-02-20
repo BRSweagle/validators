@@ -1,7 +1,7 @@
 // description: Check that they are no duplicate keys in MDS
 
-// dublicateKeysCaseSensitive.js
-// Version:   1.1 - For Sweagle 2.23, handles new error format in JSON
+// duplicateKeysCaseSensitive.js
+// Version:   1.2 - Correct script name
 
 var skipSameValue = false;
 var errorFound = false;
