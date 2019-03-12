@@ -4,7 +4,7 @@
 // For each key that is suspected to be a password, check if value is put as sensitive data
 // Creator:   Dimitris Finas for customer POC
 // Creator:   Use substringValidator.js as source
-// Version:   1.4 - Add param to manage full path or just keyname in error message
+// Version:   1.5 - Ignore token values
 //
 
 // Define keywords in key name that defines a password
@@ -57,8 +57,8 @@ function searchSubstring (mds, searchKey, path) {
         }
         if (exception === false) {
             searches[searchKey] = true;
-            // check if the value contains the given subvalue
-            if  (!(mds[item] === "...")){
+            // check if password is not encrypted and is not a token
+            if  (!( mds[item] === "..." || mds[item].startsWith("@@") )){
               errorFound = true;
               if (errorFullPath) {
                 errorMsg = errorMsg+"ERROR: Key "+path+" is not encrypted.\n";
