@@ -1,7 +1,6 @@
 // description: Check that the value of 2 different nodes are the same
 
 // sameListValidator.js
-// For each key that is suspected to be a password, check if value is put as sensitive data
 // Creator:   Dimitris Finas for demo environment
 // Version:   1.1 - For Sweagle 2.23, handles new error format in JSON
 //
