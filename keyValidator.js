@@ -1,16 +1,18 @@
 // description: Check if specific keys list has specific values
-// Version:   1.1 - For Sweagle 2.23, handles new error format in JSON
+// Version:   1.2 - Correct error that validation stopped after first value found
 
 /**
  * var keysWithWantedValues is an object that holds the keys that we want to search with their wanted values in an array
  */
 var keysWithWantedValues = {
-  "background-color" : ["#e9e9e9"]
+  "memory" : ["2G"],
+    "cpus" : ["2"]
 };
 
 
 // searches is a local object that holds results for each search
 var searches = {};
+var found = {};
 var errorFound = false;
 var errorMsg = "";
 /**
@@ -37,8 +39,11 @@ function validateKey (mds, searchKey, searchValue) {
       // check if the key equals to the search term
       if (item === searchKey ) {
         // check if the value equals to the given value
-        if  (mds[item] === searchValue) {
+        if  (mds[item] === searchValue && found[searchKey] === false) {
           searches[searchKey][searchValue] = true;
+        } else {
+          searches[searchKey][searchValue] = false;
+          found[searchKey]= true;
           break;
         }
       }
@@ -48,6 +53,7 @@ function validateKey (mds, searchKey, searchValue) {
 // here we call our function
 for (var obj in keysWithWantedValues) {
   for (var i=0; i < keysWithWantedValues[obj].length; i++) {
+    found[obj] = false;
     validateKey(metadataset, obj, keysWithWantedValues[obj][i]);
   }
 }
