@@ -1,11 +1,11 @@
-// description: Check if docker image tags respect expected format
+// description: Check if docker image path is correct
 
-// dockerCheck-tags.js
+// dockerCheck-imageOrg.js
 // Creator:   Dimitris
-// Version:   1.0 - First
-//
+// Version:   1.1 - Add exception svcExceptionList
+
 var servicesNodeName = "services";
-var imageExpectedFormat = "^.*:([0-9]+.?)+([-_]{1}[A-Za-z0-9.]+)?$" ;
+var imageExpectedOrg = "/release/" ;
 var keyToSearch = "image";
 var errorFound = false;
 var errors = [];
@@ -23,16 +23,17 @@ if (servicesSubset == "ERROR: NOT FOUND") {
     for (var item in servicesSubset) {
         //console.log("service="+item);
         if (! svcExceptionList.hasOwnProperty(item)) {
-            if (! checkKeyValuesByName(servicesSubset[item], keyToSearch, imageExpectedFormat)) {
-              errorFound = true;
-              errors.push("*** For service ("+item+"): image tag doesn't respect good practises (only numbers) !");
-            }
+          if (! checkKeyValuesByName(servicesSubset[item], keyToSearch, imageExpectedOrg)) {
+            errorFound = true;
+            errors.push("*** For service ("+item+"): image doesn't have 'release' organisation !");
+          }
         }
     }
 }
 
 description = errors.join(', ');
 return {description: description, result:!errorFound};
+
 
 // Return a subset of existing mds
 // If not found, then "ERROR: NOT FOUND" is returned
@@ -70,8 +71,8 @@ function checkKeyValuesByName (mds, keyName, regex) {
       if (item === keyName ) {
         if (! mds[item].match(regex)) {
           return false;
-        }
-        return true;
+        };
+        return true
       }
     }
   }

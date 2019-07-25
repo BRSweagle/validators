@@ -1,12 +1,11 @@
-// description: Check if docker image tags respect expected format
+// description: Check if docker limits (cpus and memory) have been defined for each service
 
-// dockerCheck-tags.js
+// dockerCheck-limits.js
 // Creator:   Dimitris
-// Version:   1.0 - First
+// Version:   1.0 - Add exception list
 //
 var servicesNodeName = "services";
-var imageExpectedFormat = "^.*:([0-9]+.?)+([-_]{1}[A-Za-z0-9.]+)?$" ;
-var keyToSearch = "image";
+var paramToSearch = ["deploy.resources.limits.cpus", "deploy.resources.limits.memory"];
 var errorFound = false;
 var errors = [];
 var description = '';
@@ -23,18 +22,26 @@ if (servicesSubset == "ERROR: NOT FOUND") {
     for (var item in servicesSubset) {
         //console.log("service="+item);
         if (! svcExceptionList.hasOwnProperty(item)) {
-            if (! checkKeyValuesByName(servicesSubset[item], keyToSearch, imageExpectedFormat)) {
-              errorFound = true;
-              errors.push("*** For service ("+item+"): image tag doesn't respect good practises (only numbers) !");
+            for (var i=0; i<paramToSearch.length; i++) {
+                //console.log("param="+paramToSearch[i]);
+                var result = getValueByPath(servicesSubset[item], paramToSearch[i], ".");
+                if (result == "ERROR: NOT FOUND") {
+                    errorFound = true;
+        			errors.push("*** For service ("+item+"): Limits ("+paramToSearch[i]+") not Found");
+                }
             }
         }
     }
+
 }
 
 description = errors.join(', ');
 return {description: description, result:!errorFound};
 
-// Return a subset of existing mds
+
+// Return the value of a specific key based on its name
+// If the key is a node, then it returns a subset
+// If multiple keys with same name, the first value found is returned
 // If not found, then "ERROR: NOT FOUND" is returned
 function getSubsetByName(mds, name) {
   var value = "ERROR: NOT FOUND";
@@ -55,25 +62,21 @@ function getSubsetByName(mds, name) {
   return value;
 }
 
-// Check that values of all key with specified names matches a regex
-// nodes are not taken into account
+// Return the value of a specific key based on its complete path
+// If the key is a node, then it returns "ERROR: NOT FOUND"
 // If not found, then "ERROR: NOT FOUND" is returned
-function checkKeyValuesByName (mds, keyName, regex) {
-  var found = false;
-  for (var item in mds) {
-    // check if the key has a value or points to an object
-    if  (typeof (mds[item]) === "object") {
-      // if value is an object call recursively the function to search this subset of the object
-      found = checkKeyValuesByName(mds[item], keyName, regex);
+function getValueByPath(mds, path, pathSeparator = ',') {
+  var pathSteps =  path.split(pathSeparator);
+  var subset = mds;
+  for (var i = 0; i < pathSteps.length; i++ ) {
+    if (subset.hasOwnProperty(pathSteps[i])) {
+      subset = subset[pathSteps[i]];
     } else {
-      // check if the key match expected regex
-      if (item === keyName ) {
-        if (! mds[item].match(regex)) {
-          return false;
-        }
-        return true;
-      }
+      return "ERROR: NOT FOUND";
     }
   }
-  return found;
+  if (typeof (subset) === "object") {
+      return "ERROR: NOT FOUND";
+  }
+  return subset;
 }
