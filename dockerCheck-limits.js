@@ -65,7 +65,7 @@ function getSubsetByName(mds, name) {
 // Return the value of a specific key based on its complete path
 // If the key is a node, then it returns "ERROR: NOT FOUND"
 // If not found, then "ERROR: NOT FOUND" is returned
-function getValueByPath(mds, path, pathSeparator = ',') {
+function getValueByPath(mds, path, pathSeparator) {
   var pathSteps =  path.split(pathSeparator);
   var subset = mds;
   for (var i = 0; i < pathSteps.length; i++ ) {

@@ -14,7 +14,7 @@ var description = '';
 
 var rootNode = Object.keys(metadataset)[0];
 // Get approved value for networks, both with or without tokens
-var approvedNetwork = getValueByPath(metadataset,rootNode+",APP_TRI") + getValueByPath(metadataset,rootNode+",ENV_CODE");
+var approvedNetwork = getValueByPath(metadataset,rootNode+"/APP_TRI") + getValueByPath(metadataset,rootNode+"/ENV_CODE", "/");
 var approvedNetworkToken = "@@APP_TRI@@@@ENV_CODE@@";
 //console.log("approvedNetwork="+approvedNetwork);
 
@@ -105,7 +105,7 @@ function getValueByName(mds, name) {
   return value;
 }
 
-function getValueByPath(mds, path, pathSeparator = ',') {
+function getValueByPath(mds, path, pathSeparator) {
   var pathSteps =  path.split(pathSeparator);
   var subset = mds;
   for (var i = 0; i < pathSteps.length; i++ ) {
@@ -121,7 +121,7 @@ function getValueByPath(mds, path, pathSeparator = ',') {
 // Return the value of a specific label based on its complete path
 // If not found, then "ERROR: NOT FOUND" is returned
 // If duplicates, then "ERROR: DUPLICATES" is returned
-function getLabelByPath(mds, path, pathSeparator = ',') {
+function getLabelByPath(mds, path, pathSeparator) {
   var pathSteps =  path.split(pathSeparator);
   var subset = mds;
   var nbFounds = 0;

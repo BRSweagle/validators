@@ -69,7 +69,7 @@ function getSubsetByName(mds, name) {
 // Return the value of a specific key based on its complete path
 // If not found, then "ERROR: NOT FOUND" is returned
 // If duplicates, then "ERROR: DUPLICATES" is returned
-function getValueByPath(mds, path, pathSeparator = ',') {
+function getValueByPath(mds, path, pathSeparator) {
   var pathSteps =  path.split(pathSeparator);
   var subset = mds;
   var nbFounds = 0;
