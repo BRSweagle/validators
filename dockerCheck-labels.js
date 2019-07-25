@@ -23,7 +23,7 @@ if (servicesSubset == "ERROR: NOT FOUND") {
     for (var item in servicesSubset) {
         //console.log("service="+item);
         if (! svcExceptionList.hasOwnProperty(item)) {
-            //console.log("*** service ("+item+") is not in exception list");
+            //console.log("*** service ("+item+") is in exception list");
             for (var i=0; i<labelsToSearch.length; i++) {
                 //console.log("param="+paramToSearch[i]);
                 result = getValueByPath(servicesSubset[item], labelsToSearch[i], "/");
@@ -83,7 +83,7 @@ function getValueByPath(mds, path, pathSeparator = ',') {
   //console.log("label="+pathSteps[i]);
   for (var item in subset) {
       if (item.match("^"+pathSteps[i]+"=.*$")) {
-          subset = subset[pathSteps[i]];
+          subset = item;
           nbFounds = nbFounds+1;
       }
   };
