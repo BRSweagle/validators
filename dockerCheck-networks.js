@@ -14,7 +14,7 @@ var description = '';
 
 var rootNode = Object.keys(metadataset)[0];
 // Get approved value for networks, both with or without tokens
-var approvedNetwork = getValueByPath(metadataset,rootNode+"/APP_TRI") + getValueByPath(metadataset,rootNode+"/ENV_CODE", "/");
+var approvedNetwork = getValueByPath(metadataset,rootNode+"/APP_TRI","/") + getValueByPath(metadataset,rootNode+"/ENV_CODE", "/");
 var approvedNetworkToken = "@@APP_TRI@@@@ENV_CODE@@";
 //console.log("approvedNetwork="+approvedNetwork);
 
