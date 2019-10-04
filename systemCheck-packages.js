@@ -2,17 +2,17 @@
 
 // systemCheck-packages.js
 // Creator:   Stefan/Dimitris for customer POC
-// Version:   1.0 - First
+// Version:   1.1 - align code with other systemChecks
 //
 var rootName = Object.keys(metadataset)[0];
 var root = metadataset[rootName];
 var approvedPackages = root.approved.system.packages;
+var packagePath = "system/packages";
 var maxDisplay = 5;
 
 var errorFound = false;
 var errors = [];
 var description = '';
-
 
 if (approvedPackages == undefined) {
     return {description: "*** ERROR: Approved list not found ", result: false};
@@ -36,12 +36,13 @@ return {description: description, result:!errorFound};
 function check(serverName, subset) {
   var unallowedPackages = [];
   var versionMismatches = [];
+  var packages = getValueByPath(subset, packagePath);
   // check whether all packages are of correct version
-  for (var pack in subset.system.packages) {
+  for (var pack in packages) {
       if(typeof(approvedPackages[pack]) === 'undefined') {
           unallowedPackages.push(pack);
-      } else if (approvedPackages[pack] != subset.system.packages[pack]) {
-          versionMismatches.push(pack + ' => ' + subset.system.packages[pack] + '<>' + approvedPackages[pack]);
+      } else if (approvedPackages[pack] != packages[pack]) {
+          versionMismatches.push(pack + ' => ' + packages[pack] + '<>' + approvedPackages[pack]);
       }
   }
   if (unallowedPackages.length > 0 || versionMismatches.length > 0) {
@@ -54,7 +55,7 @@ function check(serverName, subset) {
           }
       }
       if (versionMismatches.length > 0) {
-          var min = Math.min(unallowedPackages.length, maxDisplay);
+          var min = Math.min(versionMismatches.length, maxDisplay);
           errors.push('*** For server ('+serverName+'): ' + versionMismatches.length + ' packages in wrong version found. First ' + min + ' are:');
           for (var i = 0; i < min; i++) {
             errors.push(versionMismatches[i]);
@@ -63,4 +64,21 @@ function check(serverName, subset) {
     } else {
       errors.push('*** For server ('+serverName+'): All packages are allowed and on the correct version');
     }
+}
+
+// Return the value of a specific key based on its complete path
+// If the key is a node, then it returns a subset
+// If not found, then "ERROR: NOT FOUND" is returned
+function getValueByPath(mds, path) {
+  var pathSeparator = '/';
+  var pathSteps =  path.split(pathSeparator);
+  var subset = mds;
+  for (var i = 0; i < pathSteps.length; i++ ) {
+    if (subset.hasOwnProperty(pathSteps[i])) {
+      subset = subset[pathSteps[i]];
+    } else {
+      return "ERROR: NOT FOUND";
+    }
+  }
+  return subset;
 }
