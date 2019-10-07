@@ -2,7 +2,7 @@
 
 // systemCheck-sudoers.js
 // Creator:   Dimitris for customer POC
-// Version:   1.0 - First
+// Version:   1.1 - Correct error
 //
 var rootName = Object.keys(metadataset)[0];
 var root = metadataset[rootName];
@@ -47,9 +47,15 @@ function check(serverName, subset) {
     errorFound = true;
     errors.push("*** For server ("+serverName+"): sudoers list doesn't have good number of lines.");
   }
+//  console.log(sudoersNode);
+//  console.log(approvedNode);
+
   for (var line in sudoersNode) {
     for (var item in sudoersNode[line]) {
-      if (!(approvedNode[line].hasOwnProperty(item)) || sudoersNode[line][item] !== approvedNode[line][item]) {
+        if (typeof(approvedNode[line]) === 'undefined') {
+          errorFound = true;
+          errors.push("*** For server ("+serverName+"): sudoers configuration for line "+line+", key ("+item+") doesn't exists in approved list");
+        } else if (!(approvedNode[line].hasOwnProperty(item)) || sudoersNode[line][item] !== approvedNode[line][item]) {
           errorFound = true;
           errors.push("*** For server ("+serverName+"): sudoers configuration for line "+line+", key ("+item+") is not approved");
       }
