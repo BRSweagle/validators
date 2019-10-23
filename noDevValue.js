@@ -20,8 +20,9 @@ var exceptionList= [
     "KEYNAME"
     ];
 
-// Definesthe max number of errors to return
+// Defines if error must include full path of key found
 var includePath = false;
+// Defines the max number of errors to return
 var maxErrorDisplay = 5;
 var errorFound = false;
 var errors = [];
