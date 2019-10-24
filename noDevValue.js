@@ -30,15 +30,15 @@ var description = '';
 
 // here we call our function with different search terms
 for (var i= 0; i < keyValuesWithDevValue.length; i++) {
-  if (includePath) { searchSubstringWithPath(metadataset, keyValuesWithDevValue[i].toLowerCase()) }
-  else { searchSubstring(metadataset, keyValuesWithDevValue[i].toLowerCase())};
+  if (includePath) { searchSubstringWithPath(metadataset, keyValuesWithDevValue[i].toLowerCase(), [], 0, "/"); }
+  else { searchSubstring(metadataset, keyValuesWithDevValue[i].toLowerCase()); }
 }
 
 if (errorFound) {
-  description = "Validation failed, only first "+maxErrorDisplay+" errors are displayed:" + errors.join(' ');
-} else {
-  description = "Validation passed successfully";
-}
+  if (errors.length < maxErrorDisplay) { description = "ERRORS: " + errors.join(' '); }
+  else { description = "ERRORS: only first "+maxErrorDisplay+" errors are displayed:" + errors.join(' '); }
+} else { description = "Validation passed successfully"; }
+
 return {description: description, result:!errorFound};
 
 /**
@@ -67,7 +67,7 @@ function searchSubstring (mds, searchValue) {
         }
         if (exception === false) {
           errorFound = true;
-          errors.push("*** ERROR: key "+item+" contains DEV value: "+mds[item]);
+          errors.push("## key "+item+" contains DEV value: "+mds[item]);
         }
       }
     }
@@ -75,7 +75,7 @@ function searchSubstring (mds, searchValue) {
 }
 
 
-function searchSubstringWithPath (mds, searchValue, prefix=[], level=0, pathSeparator="/") {
+function searchSubstringWithPath (mds, searchValue, prefix, level, pathSeparator) {
   for (var item in mds) {
     // get out if we already reach max nb of errors to display
     if (errors.length >= maxErrorDisplay) { break; }
@@ -89,16 +89,13 @@ function searchSubstringWithPath (mds, searchValue, prefix=[], level=0, pathSepa
       if (mds[item].toLowerCase().includes(searchValue)) {
         var exception = false;
         for(var exc=0; exc < exceptionList.length; exc++) {
-          if (item.toLowerCase() === exceptionList[exc].toLowerCase()) {
-              exception=true;
-              break;
-          }
+          if (item.toLowerCase() === exceptionList[exc].toLowerCase()) { exception=true; break; }
         }
         if (exception === false) {
           errorFound = true;
           var pre=prefix[0];
           for (var i=1; i<level;i++) { pre = pre + pathSeparator + prefix[i]; }
-          errors.push("*** ERROR: key "+pre+pathSeparator+item+" contains DEV value: "+mds[item]);
+          errors.push("## key "+pre+pathSeparator+item+" contains DEV value: "+mds[item]);
         }
       }
     }

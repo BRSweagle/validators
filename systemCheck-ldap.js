@@ -6,15 +6,15 @@
 //
 var rootName = Object.keys(metadataset)[0];
 var root = metadataset[rootName];
-var approvedNode = root.approved.ldap.bases;
-var ldapPath = "system/ldap/BASE";
+var approvedNode = root.approved.system.ldap.bases;
+var ldapPath = "system/ldap/base";
 
 var errorFound = false;
 var errors = [];
 var description = '';
 
 if (approvedNode == undefined) {
-    return {description: "*** ERROR: Approved list not found ", result: false};
+    return {description: "## ERROR: Approved list not found ", result: false};
 }
 var approvedArray = Object.keys(approvedNode);
 
@@ -36,12 +36,12 @@ function check(serverName, subset) {
 	var ldapBase = getValueByPath(subset, ldapPath);
   if (ldapBase == "ERROR: NOT FOUND") {
     errorFound = true;
-    errors.push("*** For server ("+serverName+"), ldap BASE DN key not found");
+    errors.push("## For server ("+serverName+"), ldap BASE DN key not found");
     return errorFound;
   }
 	if(!approvedArray.includes(ldapBase)) {
 			errorFound = true;
-			errors.push("*** For server ("+serverName+"): LDAP base DN ("+ ldapBase +") is not approved !");
+			errors.push("## For server ("+serverName+"): LDAP base DN ("+ ldapBase +") is not approved !");
 	}
 }
 
