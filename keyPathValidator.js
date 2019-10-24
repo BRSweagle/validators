@@ -11,8 +11,6 @@ var pathAndWantedValues = {
   "openshift/environment/p/resources/autoscaling/replicas" : ["*>", "1"],
   "openshift/environment/p/resources/autoscaling.replicas.min" : [">", "1"],
   "src/main/resources/application-p/logging/level" : ["*=", "warning", "error", "fatal"],
-  "src/main/resources/application-p/logging/level/com.groupama" : ["=", "warning", "error", "fatal"],
-  "src/main/resources/application-p/logging/level/org.springframework" : ["=", "warning", "error", "fatal"]
 };
 var pathSeparator = "/";
 var rootName = Object.keys(metadataset)[0];
