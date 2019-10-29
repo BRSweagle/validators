@@ -39,7 +39,7 @@ function checkMatchingHosts(mds, regex, prefix, level, pathSeparator) {
       // If we are on a node call recursively the function, skipping approved node
       if (item != "approved") {
         prefix[level] = item;
-        checkMatchingHosts (mds[item], regex, prefix, level+1, "/");
+        checkMatchingHosts (mds[item], regex, prefix, level+1, pathSeparator);
       }
     } else if (mds[item].indexOf(domain)!=-1 && regex.test(mds[item])) {
       if (! approvedArray.includes(mds[item])) {

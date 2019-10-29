@@ -38,7 +38,7 @@ function checkMatchingUrls(mds, prefix, level, pathSeparator) {
       // If we are on a node call recursively the function
       if (item != "approved") {
         prefix[level] = item;
-        checkMatchingUrls (mds[item], prefix, level+1, "/");
+        checkMatchingUrls (mds[item], prefix, level+1, pathSeparator);
       }
     } else if (validUrlRegex.test(mds[item]) ) {
       var host=getHost(mds[item]);
