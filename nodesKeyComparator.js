@@ -25,7 +25,6 @@ var description = '';
 
 var fromSubset = getSubset(metadataset,fromNode);
 var toSubset = getSubset(metadataset,toNode);
-var toSubset = getSubset(metadataset,toNode);
 var fromName = fromNode[fromNode.length-1];
 var toName = toNode[toNode.length-1];
 
