@@ -6,69 +6,72 @@
 // Inputs are
 //    - 2 nodes to compare (path to the node in the form of an array)
 // Creator:   Dimitris for customer POC
-// Version:   1.1 - For Sweagle 2.23, handles new error format in JSON
+// Version:   1.2 - New code format
 //
-var fromNode=["assignedRelease","webportal1-2.1.2","ui-1.1","json","mi6-options","fields","gadget","optionLabels"]
-var toNode=["assignedRelease","webportal1-2.1.2","ui-1.1","json","mi6-schema","properties","gadget","enum"]
+var rootName = Object.keys(metadataset)[0];
+//var root = metadataset[rootName];
+//var fromNode=[rootName,"openshift","environment","q"]
+//var toNode=[rootName,"openshift","environment","p"]
+var fromNode=[rootName,"src","main","resources","application-q"]
+var toNode=[rootName,"src","main","resources","application-d"]
 
-
-var fromSubset = metadataset;
-var toSubset = metadataset;
+// Defines if error must include full path of key found
+var includePath = true;
+// Defines the max number of errors to return
+var maxErrorDisplay = 5;
 var errorFound = false;
-var errorMsg = "";
+var errors = [];
+var description = '';
+
+var fromSubset = getSubset(metadataset,fromNode);
+var toSubset = getSubset(metadataset,toNode);
+var toSubset = getSubset(metadataset,toNode);
+var fromName = fromNode[fromNode.length-1];
+var toName = toNode[toNode.length-1];
+
+var sizeFromSubset = Object.keys(fromSubset).length;
+var sizeToSubset = Object.keys(toSubset).length;
+
+// Check if any path were not found
+if (sizeFromSubset == 0) { return {description: "### ERROR: Node "+fromName+" not found", result: false}; }
+if (sizeToSubset == 0) { return {description: "### ERROR: Node "+toName+" not found", result: false}; }
+
+compareSubsets(fromSubset, toSubset, toName, fromNode, fromNode.length, "/");
+compareSubsets(toSubset, fromSubset, fromName, toNode, toNode.length, "/");
+
+if (errorFound) {
+  if (errors.length < maxErrorDisplay) { description = "ERRORS: " + errors.join(' '); }
+  else { description = "ERRORS: only first "+maxErrorDisplay+" errors are displayed:" + errors.join(' '); }
+} else { description = "Validation passed successfully"; }
+
+return {description: description, result:!errorFound};
+
 
 // Return the subset of a metadataset based on path provided as array
 function getSubset(subset, args) {
   // we loop through all provided arguments (= nodeNames in the path) and check if the path exist
   // when we get to the last argument we return whole metadataset at that last nodeName.
   for (var i = 0; i < args.length; i++) {
-      	// check if path is valid and if so store all data in subset
-  	if (subset.hasOwnProperty(args[i]) === true) {
-  		subset = subset[args[i]];
-  	}
-  	// if not valid return error message
-  	else {
-  	    // ERROR : Path not found
-  	    return false;
-  	}
+    // check if path is valid and if so store all data in subset
+  	if (subset.hasOwnProperty(args[i]) === true) { subset = subset[args[i]]; }
+  	else { return false; } // Path not found
   }
   return subset;
 }
 
-fromSubset = getSubset(fromSubset,fromNode);
-toSubset = getSubset(toSubset,toNode);
-
-var sizeFromSubset = Object.keys(fromSubset).length;
-var sizeToSubset = Object.keys(toSubset).length;
-
-// Check if any path were not found
-if (sizeFromSubset == 0) {
-  errorFound = true;
-  errorMsg = errorMsg+"ERROR: Node "+fromNode+" not found.\n";
-}
-if (sizeToSubset == 0) {
-  errorFound = true;
-  errorMsg = errorMsg+"ERROR: Node "+toNode+" not found.\n";
-}
-
-if (!errorFound) {
-  // Check length of both subsets
-  if (sizeFromSubset != sizeToSubset) {
-    errorFound = true;
-    errorMsg = "ERROR: Node "+fromNode+" and node "+toNode+" don't have same number of properties.\n";
-  }
-  // compare both subsets
-  for (var item in fromSubset) {
-    if (!(toSubset.hasOwnProperty(item))) {
+function compareSubsets(subset1, subset2, name, prefix, level, pathSeparator) {
+  for (var item in subset1) {
+    if (errors.length >= maxErrorDisplay) { break; }
+    if (!(subset2.hasOwnProperty(item))) {
       errorFound = true;
-      errorMsg = errorMsg+"ERROR: Node "+toNode+" doesn't have property "+item+".\n"
-    }
-  }
-  for (var item in toSubset) {
-    if (!(fromSubset.hasOwnProperty(item))) {
-      errorFound = true;
-      errorMsg = errorMsg+"ERROR: Node "+fromNode+" doesn't have property "+item+".\n"
+      var pre=prefix[0];
+      for (var i=1; i<level;i++) { pre = pre + pathSeparator + prefix[i]; }
+      if (includePath) { errors.push("## Node "+name+" doesn't have property "+pre+pathSeparator+item); }
+      else { errors.push("## Node "+name+" doesn't have property "+item); }
+    } else if (typeof(subset1[item]) === "object") {
+      // If we are on a node call recursively the function
+      prefix[level] = item
+      compareSubsets (subset1[item], subset2[item], name, prefix, level+1, pathSeparator);
     }
   }
 }
-return {"result":!errorFound,"description":errorMsg};
