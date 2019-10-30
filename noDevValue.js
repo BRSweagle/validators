@@ -30,8 +30,7 @@ var description = '';
 
 // here we call our function with different search terms
 for (var i= 0; i < keyValuesWithDevValue.length; i++) {
-  if (includePath) { searchSubstringWithPath(metadataset, keyValuesWithDevValue[i].toLowerCase(), [], 0, "/"); }
-  else { searchSubstring(metadataset, keyValuesWithDevValue[i].toLowerCase()); }
+  searchSubstring(metadataset, keyValuesWithDevValue[i].toLowerCase(), [], 0, "/");
 }
 
 if (errorFound) {
@@ -41,41 +40,9 @@ if (errorFound) {
 
 return {description: description, result:!errorFound};
 
-/**
- * searchSubsting function searches the whole metadataset to find keys that include a given substring
- *
- * mds must be the given metadataset,
- * searchValue must be the string we want check in the values
- */
-function searchSubstring (mds, searchValue) {
-  for (var item in mds) {
-    // get out if we already reach max nb of errors to display
-    if (errors.length >= maxErrorDisplay) { break; }
-    // check if the key has a value or points to an object
-    if  (typeof (mds[item]) === "object") {
-      // if value is an object call recursively the function to search this subset of the object
-      searchSubstring (mds[item], searchValue);
-    } else {
-      // check if the key contains the search term
-      if (mds[item].toLowerCase().includes(searchValue)) {
-        var exception = false;
-        for(var exc=0; exc < exceptionList.length; exc++) {
-          if (item.toLowerCase() === exceptionList[exc].toLowerCase()) {
-              exception=true;
-              break;
-          }
-        }
-        if (exception === false) {
-          errorFound = true;
-          errors.push("## key "+item+" contains DEV value: "+mds[item]);
-        }
-      }
-    }
-  }
-}
 
-
-function searchSubstringWithPath (mds, searchValue, prefix, level, pathSeparator) {
+// searchSubsting function searches the whole metadataset to find keys that include a given substring
+function searchSubstring (mds, searchValue, prefix, level, pathSeparator) {
   for (var item in mds) {
     // get out if we already reach max nb of errors to display
     if (errors.length >= maxErrorDisplay) { break; }
@@ -83,7 +50,7 @@ function searchSubstringWithPath (mds, searchValue, prefix, level, pathSeparator
     if  (typeof (mds[item]) === "object") {
       // if value is an object call recursively the function to search this subset of the object
       prefix[level] = item;
-      searchSubstringWithPath (mds[item], searchValue, prefix, level+1);
+      searchSubstring (mds[item], searchValue, prefix, level+1);
     } else {
       // check if the key contains the search term
       if (mds[item].toLowerCase().includes(searchValue)) {
@@ -95,7 +62,8 @@ function searchSubstringWithPath (mds, searchValue, prefix, level, pathSeparator
           errorFound = true;
           var pre=prefix[0];
           for (var i=1; i<level;i++) { pre = pre + pathSeparator + prefix[i]; }
-          errors.push("## key "+pre+pathSeparator+item+" contains DEV value: "+mds[item]);
+          if (includePath) { errors.push("## key "+pre+pathSeparator+item+" contains DEV value: "+mds[item]); }
+          else { errors.push("## key "+item+" contains DEV value: "+mds[item]); }
         }
       }
     }
