@@ -50,7 +50,7 @@ function searchSubstring (mds, searchValue, prefix, level, pathSeparator) {
     if  (typeof (mds[item]) === "object") {
       // if value is an object call recursively the function to search this subset of the object
       prefix[level] = item;
-      searchSubstring (mds[item], searchValue, prefix, level+1, "/");
+      searchSubstring (mds[item], searchValue, prefix, level+1, pathSeparator);
     } else {
       // check if the key contains the search term
       if (mds[item].toLowerCase().includes(searchValue)) {
