@@ -4,7 +4,7 @@
 // For each key that is suspected to be sensitive, check if value is put as sensitive data ro a token
 // Creator:   Dimitris Finas for customer POC
 // Creator:   Use substringValidator.js as source
-// Version:   1.6 - Correct path
+// Version:   1.7 - Minor corrections
 //
 
 // Define keywords in key name that defines a password
@@ -27,10 +27,11 @@ var errorFound = false;
 var errors = [];
 var description = '';
 var tokenPrefix = "@@";
+var pathSeparator = "/";
 
 // here we call our function with different search terms
 for (var i= 0; i < keyNamesWithPasswordValues.length; i++) {
-  searchSubstring(metadataset, keyNamesWithPasswordValues[i].toLowerCase(), [], 0, "/");
+  searchSubstring(metadataset, keyNamesWithPasswordValues[i].toLowerCase(), [], 0, pathSeparator);
 }
 
 if (errorFound) {
@@ -48,7 +49,7 @@ return {description: description, result:!errorFound};
  * mds must be the given metadataset,
  * searchKey must be the string we want to check in the keys,
  */
-function searchSubstring (mds, searchKey, prefix=[], level=0, pathSeparator="/") {
+function searchSubstring (mds, searchKey, prefix, level, pathSeparator) {
   for (var item in mds) {
     // get out if we already reach max nb of errors to display
     if (errors.length >= maxErrorDisplay) { break; }
@@ -72,7 +73,7 @@ function searchSubstring (mds, searchKey, prefix=[], level=0, pathSeparator="/")
               var pre=prefix[0];
               for (var i=1; i<level;i++) { pre = pre + pathSeparator + prefix[i]; }
               if (includePath) { errors.push("## key "+pre+pathSeparator+item+" is not encrypted"); }
-              else { errors.push("## key "+item+" is not encrypted"); };
+              else { errors.push("## key "+item+" is not encrypted"); }
             }
         }
       }
