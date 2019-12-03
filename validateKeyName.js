@@ -10,7 +10,7 @@ var root = metadataset[rootName];
 var namingConventionNode=root.namingConvention;
 var maxLength=namingConventionNode.max_length;
 var approvedPrefixArray=Object.keys(namingConventionNode.prefix);
-var exceptionList= ["TRIGRAMME"];
+var exceptionList= ["namingConvention", "inputs", "package", "TRIGRAMME"];
 
 //console.log("maxLength="+maxLength);
 //console.log(approvedPrefixArray);
@@ -38,26 +38,27 @@ return {description: description, result:!errorFound};
 function checkKeyNames(mds, path) {
   for (var item in mds) {
     if (errors.length >= maxErrorDisplay) { break; }
-    if (typeof mds[item] === 'object') { checkKeyNames(mds[item], path + item + pathSeparator); }
-    else if (!exceptionList.includes(item)) {
-      var tempError="";
-      // Check if length is correct
-      if (maxLength !==0 && item.length > maxLength) {
-				if (includePath) { tempError = "Key ("+path+item+") length is superior to "+maxLength; }
-				else { tempError = "Key ("+item+") length is superior to "+maxLength; }
-        errors.push(tempError);
-			}
-      // Check if prefix is correct
-      var findOne = false;
-      for (var i=0; i<approvedPrefixArray.length; i++) {
-        if (item.startsWith(approvedPrefixArray[i])) { findOne=true; break; }
+    if (!exceptionList.includes(item)) {
+      if (typeof mds[item] === 'object') { checkKeyNames(mds[item], path + item + pathSeparator); }
+      else {
+        var tempError="";
+        // Check if length is correct
+        if (maxLength !==0 && item.length > maxLength) {
+  				if (includePath) { tempError = "Key ("+path+item+") length is superior to "+maxLength; }
+  				else { tempError = "Key ("+item+") length is superior to "+maxLength; }
+          errors.push(tempError);
+  			}
+        // Check if prefix is correct
+        var findOne = false;
+        for (var i=0; i<approvedPrefixArray.length; i++) {
+          if (item.startsWith(approvedPrefixArray[i])) { findOne=true; break; }
+        }
+        if (!findOne) {
+          if (includePath) { tempError = "Key ("+path+item+") prefix is incorrect"; }
+  				else { tempError = "Key ("+item+") prefix is incorrect"; }
+          errors.push(tempError);
+        }
       }
-      if (!findOne) {
-        if (includePath) { tempError = "Key ("+path+item+") prefix is incorrect"; }
-				else { tempError = "Key ("+item+") prefix is incorrect"; }
-        errors.push(tempError);
-      }
-
 		}
   }
 }
